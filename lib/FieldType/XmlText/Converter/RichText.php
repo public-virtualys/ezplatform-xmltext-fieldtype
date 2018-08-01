@@ -447,6 +447,29 @@ class RichText implements Converter
     }
 
     /**
+     * No paragraph elements in ezxmltext should ever have the ez-temporary attribute before start converting.
+     * Nevertheless, some legacy databases still might have that....
+     * Those needs to be removed as we use ez-temporary for internal housekeeping.
+     *
+     * @param DOMDocument $document
+     * @param $contentFieldId
+     */
+    protected function removeEzTemporaryAttributes(DOMDocument $document, $contentFieldId)
+    {
+        $xpath = new DOMXPath($document);
+
+        // Get all paragraphs which has a "ez-temporary" attribute.
+        $xpathExpression = '//paragraph[@ez-temporary]';
+
+        $elements = $xpath->query($xpathExpression);
+
+        foreach ($elements as $element) {
+            $element->removeAttribute('ez-temporary');
+            $this->logger->warning("Found ez-temporary attribute in a ezxmltext paragraphs. Removing such attribute where contentobject_attribute.id=$contentFieldId");
+        }
+    }
+
+    /**
      * Before calling this function, make sure you are logged in as admin, or at least have access to all the objects
      * being embedded and linked to in the $inputDocument.
      *
@@ -459,6 +482,7 @@ class RichText implements Converter
      */
     public function convert(DOMDocument $inputDocument, $checkDuplicateIds = false, $checkIdValues = false, $contentFieldId = null)
     {
+        $this->removeEzTemporaryAttributes($inputDocument, $contentFieldId);
         $this->removeComments($inputDocument);
         $this->checkEmptyEmbedTags($inputDocument, $contentFieldId);
         $this->fixLinksWithRemoteIds($inputDocument, $contentFieldId);
