@@ -382,7 +382,7 @@
       </xsl:if>
       <xsl:if test="@width">
         <xsl:attribute name="width">
-          <xsl:value-of select="translate(@width, 'px', '')"/>
+          <xsl:value-of select="translate(@width, translate(@width, '0123456789%', ''), '')"/>
         </xsl:attribute>
       </xsl:if>
       <xsl:if test="@custom:summary != ''">
@@ -441,7 +441,7 @@
       </xsl:if>
       <xsl:if test="@xhtml:width">
         <xsl:attribute name="ezxhtml:width">
-          <xsl:value-of select="translate(@xhtml:width, 'px', '')"/>
+          <xsl:value-of select="translate(@xhtml:width, translate(@xhtml:width, '0123456789%', ''), '')"/>
         </xsl:attribute>
       </xsl:if>
       <xsl:if test="@custom:valign">
@@ -487,7 +487,7 @@
       </xsl:if>
       <xsl:if test="@xhtml:width">
         <xsl:attribute name="ezxhtml:width">
-          <xsl:value-of select="translate(@xhtml:width, 'px', '')"/>
+          <xsl:value-of select="translate(@xhtml:width, translate(@xhtml:width, '0123456789%', ''), '')"/>
         </xsl:attribute>
       </xsl:if>
       <xsl:if test="@custom:valign">
